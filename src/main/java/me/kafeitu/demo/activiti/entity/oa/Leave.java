@@ -1,6 +1,9 @@
 package me.kafeitu.demo.activiti.entity.oa;
 
 import me.kafeitu.demo.activiti.entity.IdEntity;
+
+import com.fasterxml.jackson.core.JsonFactory;
+
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -8,9 +11,12 @@ import org.activiti.engine.task.Task;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Entity: Leave
@@ -22,6 +28,7 @@ import java.util.Map;
 public class Leave extends IdEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
+   
     private String processInstanceId;
     private String userId;
 
@@ -55,6 +62,8 @@ public class Leave extends IdEntity implements Serializable {
 
     // 流程定义
     private ProcessDefinition processDefinition;
+    
+    private List<HistoricTaskInstance> historicTaskInstances;
 
     @Column
     public String getProcessInstanceId() {
@@ -186,5 +195,24 @@ public class Leave extends IdEntity implements Serializable {
     public void setProcessDefinition(ProcessDefinition processDefinition) {
         this.processDefinition = processDefinition;
     }
+
+    @OneToMany
+    @JoinColumn(name="PROC_INST_ID_", referencedColumnName = "processInstanceId", insertable=false, updatable=false)
+	public List<HistoricTaskInstance> getHistoricTaskInstances() {
+		return historicTaskInstances;
+	}
+
+	public void setHistoricTaskInstances(List<HistoricTaskInstance> historicTaskInstances) {
+		this.historicTaskInstances = historicTaskInstances;
+	}
+
+//	public Set<HistoricTaskInstance> getHistoricTaskInstances() {
+//		return HistoricTaskInstances;
+//	}
+//
+//	public void setHistoricTaskInstances(
+//			Set<HistoricTaskInstance> historicTaskInstances) {
+//		HistoricTaskInstances = historicTaskInstances;
+//	}
 
 }

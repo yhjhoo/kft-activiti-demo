@@ -20,7 +20,7 @@ import javax.sql.DataSource;
  * @author calvin
  * @ContextConfiguration(locations = { "/applicationContext-test.xml" })
  */
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 public abstract class SpringTransactionalTestCase extends AbstractTransactionalJUnit4SpringContextTests {
 
     protected DataSource dataSource;

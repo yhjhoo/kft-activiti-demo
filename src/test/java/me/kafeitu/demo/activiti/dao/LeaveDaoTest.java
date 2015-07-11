@@ -4,15 +4,23 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import me.kafeitu.demo.activiti.entity.IdEntity;
+import me.kafeitu.demo.activiti.entity.oa.HistoricTaskInstance;
 import me.kafeitu.demo.activiti.entity.oa.Leave;
 import me.kafeitu.modules.test.spring.SpringTransactionalTestCase;
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -20,11 +28,14 @@ import org.springframework.test.context.ContextConfiguration;
  *
  * @author HenryYan
  */
-@ContextConfiguration(locations = { "/applicationContext-test.xml" })
+@ContextConfiguration(locations = { "/applicationContext.xml" })
 public class LeaveDaoTest extends SpringTransactionalTestCase {
 
 	@Autowired
 	private LeaveDao entityDao;
+	
+	@Autowired
+	private Leave1Dao leave1Dao;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -58,4 +69,48 @@ public class LeaveDaoTest extends SpringTransactionalTestCase {
 		assertNull(leave);
 	}
 
+	
+	
+	@Test
+	//如果你需要真正插入数据库,将Rollback设为false
+	@Rollback(false) 
+	public void searchTest() {
+		// 获取用户
+		Leave leave = entityDao.findOne((long) 1);
+		System.out.println(leave.getProcessInstanceId() );
+		System.out.println(leave.getHistoricTaskInstances() );
+		System.out.println(leave.getHistoricTaskInstances().size() );
+		
+		for(HistoricTaskInstance task : leave.getHistoricTaskInstances()){
+			System.out.println(task);
+		}
+		
+		assertNotNull(leave);
+	}
+	
+	
+	@Test
+	@Rollback(false) 
+	public void searchTest1() {
+		Set<Criterion> criterions = new HashSet<Criterion>();
+		criterions.add(Restrictions.isNull("leave.id"));
+//		criterions.add(Restrictions.eq("leave.historicTaskInstances.taskDefinitionKey", "hrAudit"));
+//		criterions.add(Restrictions.eq("historyTask.taskDefinitionKey", "hrAudit"));
+		
+//		leave1Dao.findByCreateria(criterions );
+		{
+		List<Leave> leaves = leave1Dao.findByCreateria(criterions );
+		System.out.println(leaves.size());
+		
+		for(Leave leave : leaves){
+			
+			System.out.println("\n\n\n*******************************");
+			System.out.println(leave.getId() + "-----" + leave.getHistoricTaskInstances().size() );
+			
+			for(HistoricTaskInstance task : leave.getHistoricTaskInstances()){
+				System.out.println(task);
+			}
+		}
+		}
+	}
 }

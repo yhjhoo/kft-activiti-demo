@@ -56,6 +56,7 @@
 						<option>调休</option>
 						<option>事假</option>
 						<option>婚假</option>
+						<option>Public Holiday</option>
 					</select>
 				</td>
 			</tr>

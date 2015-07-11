@@ -155,7 +155,7 @@ public class LeaveWorkflowService {
             String businessKey = historicProcessInstance.getBusinessKey();
             Leave leave = leaveManager.getLeave(new Long(businessKey));
             leave.setProcessDefinition(getProcessDefinition(historicProcessInstance.getProcessDefinitionId()));
-            leave.setHistoricProcessInstance(historicProcessInstance);
+//            leave.setHistoricProcessInstance(historicProcessInstance);
             results.add(leave);
         }
         page.setTotalCount(query.count());
